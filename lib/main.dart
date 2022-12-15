@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/src/material/colors.dart';
 import './componentes/transaction_form.dart';
 import 'componentes/transaction_list.dart';
 import 'models/transaction.dart';
@@ -13,6 +14,19 @@ class ExpensesApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: MyHomePage(),
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+        accentColor: Colors.amber,
+        fontFamily: 'Quicksand',
+        textTheme: const TextTheme(
+          bodyText1: TextStyle(
+            fontFamily: 'OpenSans',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -51,6 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _transactions.add(newTransaction);
     });
+    Navigator.of(context).pop();
   }
 
   _openTransactionFormModal(BuildContext context) {
@@ -63,7 +78,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Despesas Pessoais'),
+        title: Text(
+          'Despesas Pessoais',
+          style: Theme.of(context).textTheme.bodyText1,
+        ),
         actions: <Widget>[
           IconButton(
             onPressed: () => _openTransactionFormModal(context),
