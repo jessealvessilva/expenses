@@ -65,7 +65,7 @@ class Chart extends StatelessWidget {
                 value: tr['value'],
                 percentage: tr['value'] / sum,
               ),
-            );
+            ); // Teste
           }).toList(),
         ),
       ),
