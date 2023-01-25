@@ -11,7 +11,7 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 300,
+      height: 450,
       child: transaction.isEmpty
           ? Column(
               children: <Widget>[
@@ -41,19 +41,29 @@ class TransactionList extends StatelessWidget {
               itemCount: transaction.length,
               itemBuilder: (context, index) {
                 final tr = transaction[index];
-
-                return ListTile(
-                  leading: CircleAvatar(
-                    radius: 30,
-                    child: Padding(
-                      padding: const EdgeInsets.all(6),
-                      child:
-                          FittedBox(child: Text('R\$${tr.value.toString()}')),
-                    ),
+                return Card(
+                  elevation: 5,
+                  margin: EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 15,
                   ),
-                  title: Text(
-                    tr.title,
-                    style: Theme.of(context).textTheme.titleMedium,
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      child: Padding(
+                        padding: const EdgeInsets.all(6),
+                        child:
+                            FittedBox(child: Text('R\$${tr.value.toString()}')),
+                      ),
+                    ),
+                    title: Text(
+                      tr.title,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(DateFormat('d MMM y').format(tr.date)),
                   ),
                 );
               },
