@@ -63,7 +63,7 @@ class Chart extends StatelessWidget {
               child: ChartBar(
                 label: tr['day'],
                 value: tr['value'],
-                percentage: tr['value'] / sum,
+                percentage: sum == 0 ? 0 : tr['value'] / sum,
               ),
             );
           }).toList(),
