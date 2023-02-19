@@ -15,7 +15,7 @@ class ExpensesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    // SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight]);
     return MaterialApp(
       home: MyHomePage(),
       theme: ThemeData(
