@@ -5,6 +5,7 @@ import './componentes/transaction_form.dart';
 import 'componentes/transaction_list.dart';
 import 'models/transaction.dart';
 import 'componentes/chart.dart';
+import 'package:flutter/services.dart';
 import 'dart:math';
 
 main() => runApp(ExpensesApp());
@@ -14,6 +15,7 @@ class ExpensesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
       home: MyHomePage(),
       theme: ThemeData(
@@ -41,8 +43,34 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _transactions = [];
+  // final List<Transaction> _transactions = [];
 
+  final List<Transaction> _transactions = [
+    Transaction(
+      id: 't0',
+      title: 'Conta Antiga',
+      value: 400.00,
+      date: DateTime.now().subtract(const Duration(days: 3)),
+    ),
+    Transaction(
+      id: 't1',
+      title: 'Novo Tênis de Corrida',
+      value: 310.76,
+      date: DateTime.now().subtract(const Duration(days: 3)),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'Conta de Luz',
+      value: 211.30,
+      date: DateTime.now().subtract(const Duration(days: 4)),
+    ),
+    Transaction(
+      id: 't3',
+      title: 'Conta de Internet',
+      value: 199.90,
+      date: DateTime.now().subtract(const Duration(days: 0)),
+    ),
+  ];
   List<Transaction> get _recentTransactions {
     return _transactions.where((tr) {
       return tr.date.isAfter(DateTime.now().subtract(Duration(
@@ -65,6 +93,12 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.of(context).pop();
   }
 
+  _removeTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((tr) => tr.id == id);
+    });
+  }
+
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
         context: context,
@@ -73,25 +107,39 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      title: Text('Despesas Pessoais',
+          // style: Theme.of(context).textTheme.bodyText1,
+          style:
+              TextStyle(fontSize: 20 * MediaQuery.of(context).textScaleFactor)),
+      actions: <Widget>[
+        IconButton(
+          onPressed: () => _openTransactionFormModal(context),
+          icon: Icon(Icons.add),
+        )
+      ],
+    );
+
+    final availableHeight = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Despesas Pessoais',
-          style: Theme.of(context).textTheme.bodyText1,
-        ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () => _openTransactionFormModal(context),
-            icon: Icon(Icons.add),
-          )
-        ],
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Chart(recentTransaction: _transactions),
-            TransactionList(transaction: _transactions),
+            Container(
+              height: availableHeight * 0.30,
+              child: Chart(recentTransaction: _transactions),
+            ),
+            Container(
+              height: availableHeight * 0.7,
+              child: TransactionList(
+                transaction: _transactions,
+                onRemove: _removeTransaction,
+              ),
+            ),
           ],
         ),
       ),

@@ -3,72 +3,75 @@ import '../models/transaction.dart';
 import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
-  const TransactionList({super.key, required this.transaction});
+  const TransactionList(
+      {super.key, required this.transaction, required this.onRemove});
 
   final List<Transaction> transaction;
+  final void Function(String) onRemove;
   final String teste = "";
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 400,
-      child: transaction.isEmpty
-          ? Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 20,
+    return transaction.isEmpty
+        ? Column(
+            children: <Widget>[
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Nenhuma transação cadastrada',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  'Nenhuma transação cadastrada',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: 200,
+                child: Image.asset(
+                  'assests/images/waiting.png',
+                  fit: BoxFit.cover,
                 ),
-                SizedBox(
-                  height: 20,
+              )
+            ],
+          )
+        : ListView.builder(
+            itemCount: transaction.length,
+            itemBuilder: (context, index) {
+              final tr = transaction[index];
+              return Card(
+                elevation: 5,
+                margin: EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 15,
                 ),
-                SizedBox(
-                  height: 200,
-                  child: Image.asset(
-                    'assests/images/waiting.png',
-                    fit: BoxFit.cover,
-                  ),
-                )
-              ],
-            )
-          : ListView.builder(
-              itemCount: transaction.length,
-              itemBuilder: (context, index) {
-                final tr = transaction[index];
-                return Card(
-                  elevation: 5,
-                  margin: EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 15,
-                  ),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      radius: 30,
-                      child: Padding(
-                        padding: const EdgeInsets.all(6),
-                        child:
-                            FittedBox(child: Text('R\$${tr.value.toString()}')),
-                      ),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    radius: 30,
+                    child: Padding(
+                      padding: const EdgeInsets.all(6),
+                      child:
+                          FittedBox(child: Text('R\$${tr.value.toString()}')),
                     ),
-                    title: Text(
-                      tr.title,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Text(DateFormat('d MMM y').format(tr.date)),
                   ),
-                );
-              },
-            ),
-      // children: transaction.map((tr) {
-    );
+                  title: Text(
+                    tr.title,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text(DateFormat('d MMM y').format(tr.date)),
+                  trailing: IconButton(
+                    onPressed: () => onRemove(tr.id),
+                    icon: Icon(Icons.delete),
+                    color: Theme.of(context).errorColor,
+                  ),
+                ),
+              );
+            },
+          );
   }
 }
