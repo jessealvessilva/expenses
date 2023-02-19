@@ -15,7 +15,7 @@ class ExpensesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight]);
     return MaterialApp(
       home: MyHomePage(),
       theme: ThemeData(
@@ -44,6 +44,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   // final List<Transaction> _transactions = [];
+  bool _showChart = false;
 
   final List<Transaction> _transactions = [
     Transaction(
@@ -129,17 +130,32 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              height: availableHeight * 0.30,
-              child: Chart(recentTransaction: _transactions),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Exibir Gráfico'),
+                Switch(
+                    value: _showChart,
+                    onChanged: (value) {
+                      setState(() {
+                        _showChart = value;
+                      });
+                    }),
+              ],
             ),
-            Container(
-              height: availableHeight * 0.7,
-              child: TransactionList(
-                transaction: _transactions,
-                onRemove: _removeTransaction,
+            if (_showChart)
+              Container(
+                height: availableHeight * 0.30,
+                child: Chart(recentTransaction: _transactions),
               ),
-            ),
+            if (!_showChart)
+              Container(
+                height: availableHeight * 0.7,
+                child: TransactionList(
+                  transaction: _transactions,
+                  onRemove: _removeTransaction,
+                ),
+              ),
           ],
         ),
       ),
