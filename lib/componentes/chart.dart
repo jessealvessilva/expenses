@@ -28,7 +28,7 @@ class Chart extends StatelessWidget {
         }
       }
 
-      print("Day :  ${DateFormat.E().format(weekDay)}/ Total : ${totalSum}");
+      //print("Day :  ${DateFormat.E().format(weekDay)}/ Total : ${totalSum}");
       // print(totalSum);
 
       return {
@@ -49,7 +49,7 @@ class Chart extends StatelessWidget {
     List history = groupedTransaction;
     double sum = _weekTotalValue;
 
-    print("Lista ${groupedTransaction}");
+    //print("Lista ${groupedTransaction}");
     return Card(
       elevation: 6,
       margin: EdgeInsets.all(20),

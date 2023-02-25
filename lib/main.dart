@@ -15,7 +15,8 @@ class ExpensesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight]);
+    // SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
       home: MyHomePage(),
       theme: ThemeData(
@@ -108,16 +109,28 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     final appBar = AppBar(
       title: Text('Despesas Pessoais',
           // style: Theme.of(context).textTheme.bodyText1,
           style:
               TextStyle(fontSize: 20 * MediaQuery.of(context).textScaleFactor)),
       actions: <Widget>[
+        if (isLandscape)
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _showChart = !_showChart;
+                print("Valor 1 : " + _showChart.toString());
+              });
+            },
+            icon: Icon(_showChart ? Icons.list : Icons.pie_chart),
+          ),
         IconButton(
           onPressed: () => _openTransactionFormModal(context),
           icon: Icon(Icons.add),
-        )
+        ),
       ],
     );
 
@@ -130,25 +143,26 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Exibir Gráfico'),
-                Switch(
-                    value: _showChart,
-                    onChanged: (value) {
-                      setState(() {
-                        _showChart = value;
-                      });
-                    }),
-              ],
-            ),
-            if (_showChart)
+            if (isLandscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Exibir Gráfico'),
+                  Switch(
+                      value: _showChart,
+                      onChanged: (value) {
+                        setState(() {
+                          _showChart = value;
+                        });
+                      }),
+                ],
+              ),
+            if (_showChart || !isLandscape)
               Container(
-                height: availableHeight * 0.30,
+                height: availableHeight * (isLandscape ? 0.7 : 0.3),
                 child: Chart(recentTransaction: _transactions),
               ),
-            if (!_showChart)
+            if (!_showChart || !isLandscape)
               Container(
                 height: availableHeight * 0.7,
                 child: TransactionList(
