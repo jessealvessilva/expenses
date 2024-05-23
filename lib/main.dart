@@ -1,16 +1,39 @@
 import 'package:expenses/components/transaction_form.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'components/transaction_form.dart';
 import 'components/transaction_list.dart';
 import 'models/transaction.dart';
 
-main() => runApp(const ExpensesApp());
+main() => runApp(ExpensesApp());
 
 class ExpensesApp extends StatelessWidget {
-  const ExpensesApp({Key? key}) : super(key: key);
+  ExpensesApp({Key? key}) : super(key: key);
+  final ThemeData tema = ThemeData();
+
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: MyHomePage());
+    final ColorScheme colorScheme = ColorScheme.fromSeed(
+      brightness: MediaQuery.platformBrightnessOf(context),
+      seedColor: Colors.indigo,
+    );
+
+    return MaterialApp(
+      theme: tema.copyWith(
+        colorScheme: tema.colorScheme.copyWith(
+          primary: Colors.purple,
+          secondary: Colors.black,
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.purple,
+        ),
+        // floatingActionButtonTheme: FloatingActionButtonThemeData(
+        //   backgroundColor: colorScheme.tertiary,
+        //   foregroundColor: colorScheme.onTertiary,
+        // ),
+      ),
+      home: const MyHomePage(),
+    );
   }
 }
 
@@ -48,13 +71,15 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _transactions.add(newTransaction);
     });
+
+    Navigator.of(context).pop();
   }
 
   _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (_) {
-        return TransactionForm(onSubmit: _addTransaction);
+        return TransactionForm(_addTransaction);
       },
     );
   }
@@ -82,13 +107,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 elevation: 5,
               ),
             ),
-            TransactionList(transactions: _transactions),
+            TransactionList(_transactions),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () => _openTransactionFormModal(context),
+        backgroundColor: Colors.amber,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
